@@ -15,3 +15,33 @@ Objetivos
 
 * Generar Paginas xhtml
 
+
+```java
+
+@Entity
+@Faces(name="Persona", layout="basic.json",controller="PersonaController", accessRole="ADMIN,COLABORADOR", deleteRole="ADMIN")
+public class Persona {
+
+@ViewHidden(hidden=true")
+@Id
+private Long idpersona;
+
+@ViewTextField(name="nombre", label="field.nombre")
+@Column
+private String nombre;
+
+
+@ViewAutocomplete(name="pais",label="label.pais",value="idpais", display="idpais, pais")
+@Referenced
+Pais pais;
+
+
+@ViewDialogTable(name="deportes",label="label.deportes")
+@Embedded
+List<Deportes> deportes;
+
+@ViewDialogForm(name="habilidades", label="label.habilidades")
+@Embedded
+List<Habilidades> habilidades;
+
+``
