@@ -44,4 +44,26 @@ List<Deportes> deportes;
 @Embedded
 List<Habilidades> habilidades;
 
-``
+```
+
+
+
+# Controller
+
+```java
+
+public interface PersonaController extends FacesController<Persona,Long>{
+
+public default beforeSave(){
+
+}
+
+public default afterSave(){
+
+}
+
+
+}
+
+
+```
