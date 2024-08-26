@@ -1,5 +1,6 @@
 package com.jmoordb.core.annotation.faces;
 
+import com.jmoordb.core.annotation.faces.enumerations.TypeForm;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,6 +15,8 @@ public @interface FacesEntity {
     String controller() default "";
 
     String layout() default "";
+    
+    String title() default "";
 
     public String[] rolesAllowed() default "none";
 
@@ -25,13 +28,8 @@ public @interface FacesEntity {
 
     String commentary() default "";
 
-    String menuIcon();
-
-    String menuAction();
-
-    String menuLabel();
-
-    String menuBarPather();
+   TypeForm typeForm();
+    
     
     
 }
