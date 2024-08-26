@@ -9,13 +9,17 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FacesInputText {
+public @interface FacesInputTextArea {
 
     String commentary() default "";
 
     String label() default "";
-
+    
+    int rows() default 2;
+    
+    int cols() default 120;
+    
     String component() default "";
-
+    
     String id() default "";
 }

@@ -1,4 +1,5 @@
-package com.jmoordb.core.annotation.faces;
+package com.jmoordb.core.annotation;
+
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,13 +10,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FacesInputText {
-
+public @interface Ignore {
+    String value() default "";
     String commentary() default "";
-
-    String label() default "";
-
-    String component() default "";
-
-    String id() default "";
 }

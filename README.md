@@ -1,6 +1,8 @@
 
 # Jmoordb-core-faces
 
+[https://github.com/avbravo/nerysdemo](https://github.com/avbravo/nerysdemo)
+
 Framework Java para generar aplicaciones Jakarta Faces que trabajan con Jmoordb-core
 
 Objetivos
@@ -19,10 +21,12 @@ Objetivos
 
 
 
+
+
 ```java
 
 @Entity
-@Faces(name="Persona", layout="basic.json",controller="PersonaController", accessRole="ADMIN,COLABORADOR", deleteRole="ADMIN")
+@FacesEntity(name="Persona", layout="basic.json",controller="PersonaController", accessRole="ADMIN,COLABORADOR", deleteRole="ADMIN")
 public class Persona {
 
 @FacesHidden(hidden=true")
@@ -64,6 +68,47 @@ public default beforeSave(){
 public default afterSave(){
 
 }
+
+
+}
+
+
+```
+
+
+## Icono
+
+Entidad Simple
+
+```java
+
+
+
+
+```
+
+
+
+## Menu
+
+```java
+
+@LeftMenu
+public interface LeftMenu{
+
+@LeftMenu(type=Menu.ACTION, icon="pi pi-home", title="", text="", action="", rollesAllowed={"ADMIN")
+private void home();
+
+
+@LeftMenu(type=Menu.ACTION, icon="pi pi-home", title="", text="", action="")
+private void profile();
+
+@SeparatorMenu
+private void separator();
+
+
+
+
 
 
 }

@@ -48,11 +48,7 @@ Colores
             <version>1.0.2</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>com.github.avbravo</groupId>
-            <artifactId>jmoordb-core-annotations</artifactId>
-            <version>${version.jmoordb-core-annotations}</version>
-        </dependency>
+      
      
     </dependencies>
     <build>
