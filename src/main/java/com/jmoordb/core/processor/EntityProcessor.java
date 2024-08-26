@@ -19,12 +19,18 @@ import com.jmoordb.core.processor.entity.model.EntityDataSupplier;
 import com.jmoordb.core.processor.fields.EntityField;
 import com.jmoordb.core.util.MessagesUtil;
 import com.jmoordb.core.util.ProcessorUtil;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 
 @SupportedAnnotationTypes(
         {"com.jmoordb.core.annotation.Entity"})
@@ -34,6 +40,8 @@ public class EntityProcessor extends AbstractProcessor {
     private Messager messager;
     private EntityDataSupplier entityDataSupplier = new EntityDataSupplier();
 
+    FileObject f;
+ Path p;
     // <editor-fold defaultstate="collapsed" desc=" boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)">
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -50,6 +58,13 @@ public class EntityProcessor extends AbstractProcessor {
 
             List<String> uniqueIdCheckList = new ArrayList<>();
 
+          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
+
+            p = Paths.get(f.toUri())
+                    .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
+                    .getParent() // {PROJECT_ROOT}/target/generated-sources
+                    .getParent() // {PROJECT_ROOT}/target
+                    .getParent(); // {PROJECT_ROOT}
             for (Element element : elements) {
                 Entity entity = element.getAnnotation(Entity.class);
 
@@ -66,8 +81,6 @@ public class EntityProcessor extends AbstractProcessor {
 
                     EntityData entityData = entityDataSupplier.get(EntityData::new, element);
                     String nameOfEntity = "";
-
-
 
                     if (uniqueIdCheckList.contains(entityData.getCollection())) {
                         error("Entity has should be uniquely defined", element);
@@ -104,7 +117,6 @@ public class EntityProcessor extends AbstractProcessor {
             /**
              *
              */
-
             /**
              * List<EntityField almacena la información de los atributos de los
              * entity
@@ -116,13 +128,12 @@ public class EntityProcessor extends AbstractProcessor {
              */
             EntityAnalizer entityAnalizer = EntityAnalizer.get(element, messager, entityData.getDatabase(), entityFieldList, entityData);
 
-
             /**
              * Construye la clase Supplier
              */
             EntitySupplierBuilder entitySupplierSourceBuilder = new EntitySupplierBuilder();
 
-            entitySupplierSourceBuilder.init(entity, entityData, entityFieldList, entityData.getDatabase(), entityData.getCollection(),element);
+            entitySupplierSourceBuilder.init(entity, entityData, entityFieldList, entityData.getDatabase(), entityData.getCollection(), element);
 
             /**
              * SupplierServices
@@ -130,8 +141,22 @@ public class EntityProcessor extends AbstractProcessor {
             /**
              * Crea el archivo
              */
-            generateJavaFile(entityData.getPackageOfEntity() + "." + entityData.getEntityName() + "Supplier", entitySupplierSourceBuilder.end());
+            System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
+            System.out.println("\t{}[encontrando el directorio del index]");
+//            FileObject f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
+//
+//            Path p = Paths.get(f.toUri())
+//                    .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
+//                    .getParent() // {PROJECT_ROOT}/target/generated-sources
+//                    .getParent() // {PROJECT_ROOT}/target
+//                    .getParent(); // {PROJECT_ROOT}
+            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgenerated/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
+            fw.append("some content...");
+            fw.append(entitySupplierSourceBuilder.end());
+            fw.close();
 
+//  String n_p ="src/main/webapp/"+entityData.getEntityName().toLowerCase()+ ".xhtml";
+//            generateJavaFile(entityData.getPackageOfEntity() + "." + entityData.getEntityName() + "Supplier", entitySupplierSourceBuilder.end());
         } catch (Exception e) {
             MessagesUtil.error(MessagesUtil.nameOfClassAndMethod() + " error() " + e.getLocalizedMessage());
         }

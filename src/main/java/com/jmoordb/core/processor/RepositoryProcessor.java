@@ -27,8 +27,8 @@ import com.jmoordb.core.util.ProcessorUtil;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.repository.Repository"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.repository.Repository"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class RepositoryProcessor extends AbstractProcessor {
 

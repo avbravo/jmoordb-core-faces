@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.AutoImplement"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.AutoImplement"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class AutoImplementProcessor extends AbstractProcessor {
 

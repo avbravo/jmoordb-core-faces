@@ -29,8 +29,8 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.autosecuence.AutosecuenceRepository"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.autosecuence.AutosecuenceRepository"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class AutosecuenceRepositoryProcessor extends AbstractProcessor {
 

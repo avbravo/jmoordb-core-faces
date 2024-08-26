@@ -26,8 +26,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.DateSupport"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.DateSupport"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class DateSupportProcessor extends AbstractProcessor {
 

@@ -31,7 +31,7 @@ import javax.tools.JavaFileObject;
  * @author avbravo
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-@SupportedAnnotationTypes("com.avbravo.jmoordb.core.annotation.JsonObject")
+//@SupportedAnnotationTypes("com.avbravo.jmoordb.core.annotation.JsonObject")
 public class JsonObjectProcessor  extends AbstractProcessor{
     
      private static final String TEMPLATE = "com/avbravo/jmoordb/template/jsonwriter.mustache";

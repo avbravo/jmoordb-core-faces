@@ -26,8 +26,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.DocumentEmbeddable"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.DocumentEmbeddable"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class DocummentEmbedableProcessor extends AbstractProcessor {
 

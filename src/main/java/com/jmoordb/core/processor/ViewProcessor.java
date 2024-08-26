@@ -31,8 +31,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-@SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.view.View"})
+//@SupportedAnnotationTypes(
+//        {"com.jmoordb.core.annotation.view.View"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class ViewProcessor extends AbstractProcessor {
 
