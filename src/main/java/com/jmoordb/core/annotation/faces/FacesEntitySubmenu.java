@@ -15,13 +15,13 @@ public @interface FacesEntitySubmenu {
 
     String layout() default "";
 
-    public String[] rolesAllowed() default "none";
+    public String[] rolesAllowed() default {"ALL"};
 
-    public String[] saveRolesAllowed() default "none";
+    public String[] saveRolesAllowed() default {"ALL"};
 
-    public String[] updateRolesAllowed() default "none";
+    public String[] updateRolesAllowed() default {"ALL"};
 
-    public String[] deleteRolesAllowed() default "none";
+    public String[] deleteRolesAllowed() default {"ALL"};
 
     String commentary() default "";
 

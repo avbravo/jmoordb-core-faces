@@ -1,5 +1,6 @@
 package com.jmoordb.core.annotation.faces;
 
+import com.jmoordb.core.annotation.faces.enumerations.GenerateController;
 import com.jmoordb.core.annotation.faces.enumerations.RegenerationCode;
 import com.jmoordb.core.annotation.faces.enumerations.TypeForm;
 import java.lang.annotation.Documented;
@@ -19,19 +20,21 @@ public @interface FacesEntity {
     
     String title() default "";
 
-    public String[] rolesAllowed() default "none";
+    public String[] rolesAllowed() default {"ALL"};
 
-    public String[] saveRolesAllowed() default "none";
+    public String[] saveRolesAllowed() default {"ALL"};
 
-    public String[] updateRolesAllowed() default "none";
+    public String[] updateRolesAllowed() default {"ALL"};
 
-    public String[] deleteRolesAllowed() default "none";
+    public String[] deleteRolesAllowed() default {"ALL"};
 
     String commentary() default "";
 
     TypeForm typeForm();
    
     RegenerationCode regeneration() default RegenerationCode.YES;
+    
+    GenerateController generateController() default GenerateController.YES;
     
     
 }
