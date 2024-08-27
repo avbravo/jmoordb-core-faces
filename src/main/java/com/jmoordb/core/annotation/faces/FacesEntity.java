@@ -29,7 +29,8 @@ public @interface FacesEntity {
     String commentary() default "";
 
    TypeForm typeForm();
-    
+   
+       
     
     
 }

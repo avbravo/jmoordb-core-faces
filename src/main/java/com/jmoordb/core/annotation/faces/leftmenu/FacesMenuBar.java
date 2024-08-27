@@ -10,14 +10,14 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FacesLeftMenu {
+public @interface FacesMenuBar {
 
     
    boolean overlay() default true;
-   String trigger();
+   String trigger() default "";
    
    String value() default "";
-   String id();
+   String id() default "";
    String iconPos() default "right";
    String title();
    String largeCssIcon() default "mr-2 lg:mr-0 mb-0 lg:mb-2 text-base lg:text-2xl";
@@ -26,7 +26,7 @@ public @interface FacesLeftMenu {
 
    String my() default "left top";
    String at() default "left bottom";
-   public String[] rolesAllowed() ;
+   public String[] rolesAllowed() default {"ALL"};
    
                  
     

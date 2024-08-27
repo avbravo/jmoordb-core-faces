@@ -10,4 +10,4 @@ package com.jmoordb.core.annotation.faces.model;
  */
 public record BreadCrumb(String action,String value){}
   
-}
+
