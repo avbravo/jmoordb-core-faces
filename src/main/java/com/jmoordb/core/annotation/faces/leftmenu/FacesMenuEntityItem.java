@@ -1,6 +1,7 @@
 package com.jmoordb.core.annotation.faces.leftmenu;
 
 import com.jmoordb.core.annotation.faces.enumerations.FacesIcon;
+import com.jmoordb.core.annotation.faces.enumerations.RegenerationCode;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,4 +25,6 @@ public @interface FacesMenuEntityItem {
     String subMenuFather();
 
     public String[] rolesAllowed() default {"ALL"};
+    
+    RegenerationCode regeneration() default RegenerationCode.YES;
 }

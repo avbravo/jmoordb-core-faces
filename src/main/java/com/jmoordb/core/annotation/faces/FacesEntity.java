@@ -1,5 +1,6 @@
 package com.jmoordb.core.annotation.faces;
 
+import com.jmoordb.core.annotation.faces.enumerations.RegenerationCode;
 import com.jmoordb.core.annotation.faces.enumerations.TypeForm;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -28,9 +29,9 @@ public @interface FacesEntity {
 
     String commentary() default "";
 
-   TypeForm typeForm();
+    TypeForm typeForm();
    
-       
+    RegenerationCode regeneration() default RegenerationCode.YES;
     
     
 }

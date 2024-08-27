@@ -8,6 +8,6 @@ package com.jmoordb.core.annotation.faces.enumerations;
  *
  * @author avbravo
  */
-public enum TypeForm {
-    CRUD, BASIC, NONE
+public enum RegenerationCode {
+   YES,NO 
 }
