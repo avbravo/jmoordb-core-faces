@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.annotation.processing.Messager;
@@ -141,15 +142,22 @@ public class EntityProcessor extends AbstractProcessor {
             /**
              * Crea el archivo
              */
+            
+            System.out.println("???????????????????????????????????????????????");
             System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
             System.out.println("\t{}[encontrando el directorio del index]");
-//            FileObject f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
-//
-//            Path p = Paths.get(f.toUri())
-//                    .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
-//                    .getParent() // {PROJECT_ROOT}/target/generated-sources
-//                    .getParent() // {PROJECT_ROOT}/target
-//                    .getParent(); // {PROJECT_ROOT}
+
+          String path=p.toFile().toPath().toString()+"/src/main/webapp/pagesgenerated";
+           if(Files.isDirectory(Path.of(path))){
+               System.out.println(" \t existe el directorio "+path);
+           }else{
+               System.out.println("\t no existe el directorio "+path);
+               System.out.println("\t voy a crear el directorio");
+               new File(path).mkdirs();
+               //Files.createDirectory(Path.of(path));
+               System.out.println("\t se creo el directorio");
+           }
+            
             FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgenerated/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
             fw.append("some content...");
             fw.append(entitySupplierSourceBuilder.end());
