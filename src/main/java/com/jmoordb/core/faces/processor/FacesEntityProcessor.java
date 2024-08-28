@@ -1,5 +1,6 @@
-package com.jmoordb.core.processor;
+package com.jmoordb.core.faces.processor;
 
+import com.jmoordb.core.processor.*;
 import com.jmoordb.core.annotation.Entity;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -34,22 +35,22 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
 @SupportedAnnotationTypes(
-        {"com.jmoordb.core.annotation.Entity"})
+        {"com.jmoordb.core.annotation.faces.FacesEntity"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
-public class EntityProcessor extends AbstractProcessor {
+public class FacesEntityProcessor extends AbstractProcessor {
 
     private Messager messager;
     private EntityDataSupplier entityDataSupplier = new EntityDataSupplier();
     //Cambia para cada processor
-    private String fileNameForLocate="index.xhtml";
-
+    private String fileNameForLocate="pages";
     FileObject f;
- Path p;
+    Path p;
+
     // <editor-fold defaultstate="collapsed" desc=" boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)">
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
-            MessagesUtil.box("Iniciando proceso de analisis de @Entity");
+            MessagesUtil.box("Iniciando proceso de analisis de @FacesEntity");
 
             if (annotations.size() == 0) {
                 return false;
@@ -61,17 +62,26 @@ public class EntityProcessor extends AbstractProcessor {
 
             List<String> uniqueIdCheckList = new ArrayList<>();
 
-//          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
-          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
+            System.out.println("\t [Paso 0]");
+            
+//            f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
+System.out.println("\tStandardLocation.SOURCE_PATH "+StandardLocation.SOURCE_PATH);
+System.out.println("\tStandardLocation.SOURCE_OUTPUT "+StandardLocation.SOURCE_OUTPUT);
+            System.out.println("\t aui....");
 
+//  f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "documentation.xthml");
+  f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
+
+            System.out.println("\t paso aqui "+ Paths.get(f.toUri()));
+            
+System.out.println("\t [Paso 1]");
             p = Paths.get(f.toUri())
                     .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
                     .getParent() // {PROJECT_ROOT}/target/generated-sources
                     .getParent() // {PROJECT_ROOT}/target
                     .getParent(); // {PROJECT_ROOT}
-            
-              String path=p.toFile().toPath().toString()+"/src/main/webapp/pagesgeneratedx";
-        
+System.out.println("\t [Paso 2]");
+            String path = p.toFile().toPath().toString() + "/src/main/webapp/pagesgenerated";
             System.out.println("\t verificando si existe "+Path.of(path));
             if (Files.isDirectory(Path.of(path))) {
                 System.out.println("\t\t si existe");
@@ -80,7 +90,6 @@ public class EntityProcessor extends AbstractProcessor {
                 new File(path).mkdirs();
 
             }
-            
             for (Element element : elements) {
                 Entity entity = element.getAnnotation(Entity.class);
 
@@ -157,14 +166,11 @@ public class EntityProcessor extends AbstractProcessor {
             /**
              * Crea el archivo
              */
-            
-            System.out.println("======================================================");
+            System.out.println("............................................................................");
             System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
             System.out.println("\t{}[encontrando el directorio del index]");
 
-        
-            
-            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgeneratedx/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
+            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgenerated/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
             fw.append("some content...");
             fw.append(entitySupplierSourceBuilder.end());
             fw.close();
