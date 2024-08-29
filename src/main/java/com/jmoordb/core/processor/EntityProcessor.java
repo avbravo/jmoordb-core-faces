@@ -41,12 +41,13 @@ public class EntityProcessor extends AbstractProcessor {
 
     private Messager messager;
     private EntityDataSupplier entityDataSupplier = new EntityDataSupplier();
+    
+    String pathFolderGenerated ="src/main/webapp/pagesgeneratedx";
     //Cambia para cada processor
-    private String fileNameForLocate = "index.xhtml";
 
-    FileObject f;
-    Path p;
 
+//    FileObject f;
+//    Path p;
     // <editor-fold defaultstate="collapsed" desc=" boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)">
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -64,18 +65,20 @@ public class EntityProcessor extends AbstractProcessor {
             List<String> uniqueIdCheckList = new ArrayList<>();
 
 //          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
-            if (ProjectInfo.PATH == null || ProjectInfo.PATH.equals("") || ProjectInfo.PATH.equals("Unknown")) {
+            if (ProjectInfo.PATHSTRING == null || ProjectInfo.PATHSTRING.equals("") || ProjectInfo.PATHSTRING.equals("Unknown")) {
+                ProjectInfo.FILEOBJECT = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", ProjectInfo.FILENAMEINDEX);
 
+              ProjectInfo.PATH = Paths.get(ProjectInfo.FILEOBJECT.toUri())
+                        .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
+                        .getParent() // {PROJECT_ROOT}/target/generated-sources
+                        .getParent() // {PROJECT_ROOT}/target
+                        .getParent(); // {PROJECT_ROOT}
+              
+              ProjectInfo.PATHSTRING=ProjectInfo.PATH.toFile().toPath().toString();
             }
-            f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
 
-            p = Paths.get(f.toUri())
-                    .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
-                    .getParent() // {PROJECT_ROOT}/target/generated-sources
-                    .getParent() // {PROJECT_ROOT}/target
-                    .getParent(); // {PROJECT_ROOT}
-
-            String path = p.toFile().toPath().toString() + "/src/main/webapp/pagesgeneratedx";
+        //    String path = ProjectInfo.PATH.toFile().toPath().toString() + "/"+pathFolderGenerated;
+        String path = ProjectInfo.PATHSTRING+"/"+pathFolderGenerated;
 
             System.out.println("\t verificando si existe " + Path.of(path));
             if (Files.isDirectory(Path.of(path))) {
@@ -166,7 +169,7 @@ public class EntityProcessor extends AbstractProcessor {
             System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
             System.out.println("\t{}[encontrando el directorio del index]");
 
-            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgeneratedx/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
+            FileWriter fw = new FileWriter(new File(ProjectInfo.PATH.toFile(), pathFolderGenerated+"/" + entityData.getEntityName().toLowerCase() + ".xhtml"));
             fw.append("some content...");
             fw.append(entitySupplierSourceBuilder.end());
             fw.close();

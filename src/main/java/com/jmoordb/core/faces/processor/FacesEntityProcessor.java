@@ -1,7 +1,10 @@
 package com.jmoordb.core.faces.processor;
 
-import com.jmoordb.core.processor.*;
 import com.jmoordb.core.annotation.Entity;
+import com.jmoordb.core.annotation.faces.FacesEntity;
+import com.jmoordb.core.annotation.faces.model.ProjectInfo;
+import com.jmoordb.core.faces.processor.facesentity.FacesEntityData;
+import com.jmoordb.core.faces.processor.facesentity.FacesEntityDataSupplier;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -16,7 +19,6 @@ import java.util.*;
 import com.jmoordb.core.processor.entity.supplier.EntitySupplierBuilder;
 import com.jmoordb.core.processor.entity.analizer.EntityAnalizer;
 import com.jmoordb.core.processor.entity.model.EntityData;
-import com.jmoordb.core.processor.entity.model.EntityDataSupplier;
 import com.jmoordb.core.processor.fields.EntityField;
 import com.jmoordb.core.util.MessagesUtil;
 import com.jmoordb.core.util.ProcessorUtil;
@@ -30,7 +32,6 @@ import java.nio.file.Paths;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
@@ -40,11 +41,9 @@ import javax.tools.StandardLocation;
 public class FacesEntityProcessor extends AbstractProcessor {
 
     private Messager messager;
-    private EntityDataSupplier entityDataSupplier = new EntityDataSupplier();
+    private FacesEntityDataSupplier facesEntityDataSupplier = new FacesEntityDataSupplier();
     //Cambia para cada processor
-    private String fileNameForLocate="pages";
-    FileObject f;
-    Path p;
+    String pathFolderGenerated = "src/main/webapp/pagesgenerated_w";
 
     // <editor-fold defaultstate="collapsed" desc=" boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)">
     @Override
@@ -62,40 +61,33 @@ public class FacesEntityProcessor extends AbstractProcessor {
 
             List<String> uniqueIdCheckList = new ArrayList<>();
 
-            System.out.println("\t [Paso 0]");
-            
-//            f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
-System.out.println("\tStandardLocation.SOURCE_PATH "+StandardLocation.SOURCE_PATH);
-System.out.println("\tStandardLocation.SOURCE_OUTPUT "+StandardLocation.SOURCE_OUTPUT);
-            System.out.println("\t aui....");
+            if (ProjectInfo.PATHSTRING == null || ProjectInfo.PATHSTRING.equals("") || ProjectInfo.PATHSTRING.equals("Unknown")) {
+                ProjectInfo.FILEOBJECT = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", ProjectInfo.FILENAMEINDEX);
 
-//  f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "documentation.xthml");
-  f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
+                ProjectInfo.PATH = Paths.get(ProjectInfo.FILEOBJECT.toUri())
+                        .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
+                        .getParent() // {PROJECT_ROOT}/target/generated-sources
+                        .getParent() // {PROJECT_ROOT}/target
+                        .getParent(); // {PROJECT_ROOT}
 
-            System.out.println("\t paso aqui "+ Paths.get(f.toUri()));
-            
-System.out.println("\t [Paso 1]");
-            p = Paths.get(f.toUri())
-                    .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
-                    .getParent() // {PROJECT_ROOT}/target/generated-sources
-                    .getParent() // {PROJECT_ROOT}/target
-                    .getParent(); // {PROJECT_ROOT}
-System.out.println("\t [Paso 2]");
-            String path = p.toFile().toPath().toString() + "/src/main/webapp/pagesgenerated";
-            System.out.println("\t verificando si existe "+Path.of(path));
+                ProjectInfo.PATHSTRING = ProjectInfo.PATH.toFile().toPath().toString();
+            }
+
+            String path = ProjectInfo.PATHSTRING + "/" + pathFolderGenerated;
+
             if (Files.isDirectory(Path.of(path))) {
-                System.out.println("\t\t si existe");
+
             } else {
-                System.out.println("\t no existe voy a crear "+path);
+
                 new File(path).mkdirs();
 
             }
             for (Element element : elements) {
-                Entity entity = element.getAnnotation(Entity.class);
+                FacesEntity facesEntity = element.getAnnotation(FacesEntity.class);
 
                 if (element.getKind() != ElementKind.CLASS) {
 
-                    error("The annotation @Entity can only be applied on class: ",
+                    error("The annotation @FacesEntity can only be applied on class: ",
                             element);
 
                 } else {
@@ -104,25 +96,25 @@ System.out.println("\t [Paso 2]");
                      * Obtener datos del entity para EntityData
                      */
 
-                    EntityData entityData = entityDataSupplier.get(EntityData::new, element);
+                    FacesEntityData facesEntityData = facesEntityDataSupplier.get(FacesEntityData::new, element);
                     String nameOfEntity = "";
+//
+//                    if (uniqueIdCheckList.contains(facesEntityData.getCollection())) {
+//                        error("Entity has should be uniquely defined", element);
+//                        error = true;
+//                    }
 
-                    if (uniqueIdCheckList.contains(entityData.getCollection())) {
-                        error("Entity has should be uniquely defined", element);
-                        error = true;
-                    }
-
-                    error = !checkIdValidity(entityData.getCollection(), element);
-                    if (!error) {
-                        uniqueIdCheckList.add(entityData.getCollection());
+//                    error = !checkIdValidity(facesEntityData.getCollection(), element);
+//                    if (!error) {
+//                        uniqueIdCheckList.add(entityData.getCollection());
                         try {
 
-                            builderClass(entity, entityData, element);
+                            builderClass(facesEntity, facesEntityData, element);
 
                         } catch (Exception e) {
                             error(e.getMessage(), null);
                         }
-                    }
+//                    }
                 }
             }
             MessagesUtil.box("Proceso de analisis finalizado");
@@ -135,7 +127,7 @@ System.out.println("\t [Paso 2]");
 
     // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="builderClass(Entity entity, EntityData entityData,Element element, TypeMirror typeEntity)">
-    private void builderClass(Entity entity, EntityData entityData, Element element)
+    private void builderClass(FacesEntity facesEntity, FacesEntityData facesEntityData, Element element)
             throws Exception {
         try {
 
@@ -170,7 +162,8 @@ System.out.println("\t [Paso 2]");
             System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
             System.out.println("\t{}[encontrando el directorio del index]");
 
-            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgenerated/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
+            FileWriter fw = new FileWriter(new File(ProjectInfo.PATH.toFile(), pathFolderGenerated + "/" + entityData.getEntityName().toLowerCase() + ".xhtml"));
+//            FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgenerated/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
             fw.append("some content...");
             fw.append(entitySupplierSourceBuilder.end());
             fw.close();
@@ -210,7 +203,7 @@ System.out.println("\t [Paso 2]");
             for (int i = 0; i < name.length(); i++) {
                 if (i == 0 ? !Character.isJavaIdentifierStart(name.charAt(i))
                         : !Character.isJavaIdentifierPart(name.charAt(i))) {
-                    error("Entity as should be valid java "
+                    error("FacesEntity as should be valid java "
                             + "identifier for code generation: " + name, e);
 
                     valid = false;

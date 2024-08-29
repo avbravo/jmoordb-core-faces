@@ -17,5 +17,6 @@ public class ProjectInfo {
     public static String PATHSTRING = "Unknown";
     public static FileObject FILEOBJECT;
     public static Path PATH;
+    public static String FILENAMEINDEX="index.xhtml";
 
 }
