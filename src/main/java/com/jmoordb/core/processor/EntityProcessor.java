@@ -1,6 +1,7 @@
 package com.jmoordb.core.processor;
 
 import com.jmoordb.core.annotation.Entity;
+import com.jmoordb.core.annotation.faces.model.ProjectInfo;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -41,10 +42,11 @@ public class EntityProcessor extends AbstractProcessor {
     private Messager messager;
     private EntityDataSupplier entityDataSupplier = new EntityDataSupplier();
     //Cambia para cada processor
-    private String fileNameForLocate="index.xhtml";
+    private String fileNameForLocate = "index.xhtml";
 
     FileObject f;
- Path p;
+    Path p;
+
     // <editor-fold defaultstate="collapsed" desc=" boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)">
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -62,25 +64,28 @@ public class EntityProcessor extends AbstractProcessor {
             List<String> uniqueIdCheckList = new ArrayList<>();
 
 //          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", "index.xthml");
-          f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
+            if (ProjectInfo.PATH == null || ProjectInfo.PATH.equals("") || ProjectInfo.PATH.equals("Unknown")) {
+
+            }
+            f = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", fileNameForLocate);
 
             p = Paths.get(f.toUri())
                     .getParent() // {PROJECT_ROOT}/target/generated-sources/annotations
                     .getParent() // {PROJECT_ROOT}/target/generated-sources
                     .getParent() // {PROJECT_ROOT}/target
                     .getParent(); // {PROJECT_ROOT}
-            
-              String path=p.toFile().toPath().toString()+"/src/main/webapp/pagesgeneratedx";
-        
-            System.out.println("\t verificando si existe "+Path.of(path));
+
+            String path = p.toFile().toPath().toString() + "/src/main/webapp/pagesgeneratedx";
+
+            System.out.println("\t verificando si existe " + Path.of(path));
             if (Files.isDirectory(Path.of(path))) {
                 System.out.println("\t\t si existe");
             } else {
-                System.out.println("\t no existe voy a crear "+path);
+                System.out.println("\t no existe voy a crear " + path);
                 new File(path).mkdirs();
 
             }
-            
+
             for (Element element : elements) {
                 Entity entity = element.getAnnotation(Entity.class);
 
@@ -157,13 +162,10 @@ public class EntityProcessor extends AbstractProcessor {
             /**
              * Crea el archivo
              */
-            
             System.out.println("======================================================");
             System.out.println("\t{entityData.getEntityName().toLowerCase()} " + entityData.getEntityName().toLowerCase());
             System.out.println("\t{}[encontrando el directorio del index]");
 
-        
-            
             FileWriter fw = new FileWriter(new File(p.toFile(), "src/main/webapp/pagesgeneratedx/" + entityData.getEntityName().toLowerCase() + "_generated.xhtml"));
             fw.append("some content...");
             fw.append(entitySupplierSourceBuilder.end());
